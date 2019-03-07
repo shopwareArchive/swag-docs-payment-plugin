@@ -18,7 +18,11 @@ use Symfony\Component\Config\FileLocator;
 class PaymentPlugin extends Plugin
 {
     /**
-     * UUID4 for your payment method
+     * UUID4 for your payment method.
+     * It is not auto-generated for several reasons:
+     * - Easy deactivate / active, because we don't have to fetch the ID first
+     * - Always the same ID, even when reinstalling
+     * - Easily fetch your payment method by ID by using this constant, instead of fetching the ID via technical name
      */
     public const PAYMENT_METHOD_ID = '3651742281b5496499eba1671d0e8d83';
 
