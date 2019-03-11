@@ -57,6 +57,13 @@ class PaymentPlugin extends Plugin
 
     private function addPaymentMethod(Context $context): void
     {
+        $paymentMethodExists = $this->getPaymentMethodId();
+
+        // Payment method exists already, no need to continue here
+        if ($paymentMethodExists) {
+            return;
+        }
+
         /** @var PluginIdProvider $pluginIdProvider */
         $pluginIdProvider = $this->container->get(PluginIdProvider::class);
         $pluginId = $pluginIdProvider->getPluginIdByTechnicalName($this->getName(), $context);
@@ -80,15 +87,34 @@ class PaymentPlugin extends Plugin
         /** @var EntityRepositoryInterface $paymentRepository */
         $paymentRepository = $this->container->get('payment_method.repository');
 
-        // Fetch ID for update
-        $paymentCriteria = (new Criteria())->addFilter(new EqualsFilter('technicalName', self::PAYMENT_METHOD_NAME));
-        $paymentId = $paymentRepository->searchIds($paymentCriteria, Context::createDefaultContext())->getIds()[0];
+        $paymentMethodId = $this->getPaymentMethodId();
+
+        // Payment does not even exist, so nothing to (de-)activate here
+        if (!$paymentMethodId) {
+            return;
+        }
 
         $paymentMethod = [
-            'id' => $paymentId,
+            'id' => $paymentMethodId,
             'active' => $active,
         ];
 
         $paymentRepository->update([$paymentMethod], $context);
+    }
+
+    private function getPaymentMethodId(): ?string
+    {
+        /** @var EntityRepositoryInterface $paymentRepository */
+        $paymentRepository = $this->container->get('payment_method.repository');
+
+        // Fetch ID for update
+        $paymentCriteria = (new Criteria())->addFilter(new EqualsFilter('technicalName', self::PAYMENT_METHOD_NAME));
+        $paymentIds = $paymentRepository->searchIds($paymentCriteria, Context::createDefaultContext())->getIds();
+
+        if (!$paymentIds) {
+            return null;
+        }
+
+        return $paymentIds[0];
     }
 }
