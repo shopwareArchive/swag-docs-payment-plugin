@@ -79,7 +79,7 @@ class PaymentPlugin extends Plugin
 
         /** @var EntityRepositoryInterface $paymentRepository */
         $paymentRepository = $this->container->get('payment_method.repository');
-        $paymentRepository->upsert([$examplePaymentData], $context);
+        $paymentRepository->create([$examplePaymentData], $context);
     }
 
     private function setPaymentMethodIsActive(bool $active, Context $context): void
