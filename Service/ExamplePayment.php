@@ -2,7 +2,7 @@
 
 namespace PaymentPlugin\Service;
 
-use Shopware\Core\Checkout\Payment\Cart\PaymentHandler\PaymentHandlerInterface;
+use Shopware\Core\Checkout\Payment\Cart\PaymentHandler\AsynchronousPaymentHandlerInterface;
 use Shopware\Core\Checkout\Payment\Cart\PaymentTransactionStruct;
 use Shopware\Core\Defaults;
 use Shopware\Core\Framework\Context;
@@ -11,7 +11,7 @@ use Shopware\Core\System\StateMachine\StateMachineRegistry;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-class ExamplePayment implements PaymentHandlerInterface
+class ExamplePayment implements AsynchronousPaymentHandlerInterface
 {
     /**
      * @var EntityRepositoryInterface

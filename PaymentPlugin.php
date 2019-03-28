@@ -69,11 +69,10 @@ class PaymentPlugin extends Plugin
         $pluginId = $pluginIdProvider->getPluginIdByTechnicalName($this->getName(), $context);
 
         $examplePaymentData = [
-            'technicalName' => self::PAYMENT_METHOD_NAME,
+            // payment handler will be selected by the identifier
+            'handlerIdentifier' => ExamplePayment::class,
             'name' => 'Example payment',
-            'additionalDescription' => 'Example payment description',
-            // Add your payment handler here
-            'class' => ExamplePayment::class,
+            'description' => 'Example payment description',
             'pluginId' => $pluginId,
         ];
 
