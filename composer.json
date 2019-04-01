@@ -15,12 +15,17 @@
     "extra": {
         "installer-name": "PaymentPlugin",
         "label": {
-            "de_DE": "Beispiel Bezahlungsplugin",
+            "de_DE": "Zahlungsart Beispielplugin",
             "en_GB": "Example payment plugin"
         },
         "description": {
             "de_DE": "Fügt eine neue Zahlungsmethode dem System hinzu",
             "en_GB": "Adds a new payment method to the system"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "PaymentPlugin\\": ""
         }
     }
 }
