@@ -12,18 +12,13 @@ use Shopware\Core\Framework\Plugin\Context\ActivateContext;
 use Shopware\Core\Framework\Plugin\Context\DeactivateContext;
 use Shopware\Core\Framework\Plugin\Context\InstallContext;
 use Shopware\Core\Framework\Plugin\Context\UninstallContext;
-use Shopware\Core\Framework\Plugin\Helper\PluginIdProvider;
+use Shopware\Core\Framework\Plugin\Util\PluginIdProvider;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\Config\FileLocator;
 
 class PaymentPlugin extends Plugin
 {
-    /**
-     * The technical name of the example payment method
-     */
-    public const PAYMENT_METHOD_NAME = 'ExamplePayment';
-
     public function build(ContainerBuilder $container): void
     {
         parent::build($container);
@@ -107,13 +102,13 @@ class PaymentPlugin extends Plugin
         $paymentRepository = $this->container->get('payment_method.repository');
 
         // Fetch ID for update
-        $paymentCriteria = (new Criteria())->addFilter(new EqualsFilter('technicalName', self::PAYMENT_METHOD_NAME));
-        $paymentIds = $paymentRepository->searchIds($paymentCriteria, Context::createDefaultContext())->getIds();
+        $paymentCriteria = (new Criteria())->addFilter(new EqualsFilter('handlerIdentifier', ExamplePayment::class));
+        $paymentIds = $paymentRepository->searchIds($paymentCriteria, Context::createDefaultContext());
 
-        if (!$paymentIds) {
+        if ($paymentIds->getTotal() === 0) {
             return null;
         }
 
-        return $paymentIds[0];
+        return $paymentIds->getIds()[0];
     }
 }

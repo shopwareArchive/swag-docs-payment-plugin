@@ -10,7 +10,7 @@ class UsedClassesAvailableTest extends TestCase
 {
     use IntegrationTestBehaviour;
 
-    public function testClassesAreInstantiable()
+    public function testClassesAreInstantiable(): void
     {
         $namespace = str_replace('\Test', '', __NAMESPACE__);
 
@@ -23,7 +23,7 @@ class UsedClassesAvailableTest extends TestCase
         }
 
         // Nothing broke so far, classes seem to be instantiable
-        $this->assertTrue(true);
+        static::assertTrue(true);
     }
 
     private function getPluginClasses(): Finder
