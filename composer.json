@@ -2,7 +2,7 @@
     "name": "swag/payment-plugin",
     "description": "Payment plugin guide",
     "version": "v1.0.0",
-    "type": "shopware-plugin",
+    "type": "shopware-platform-plugin",
     "license": "MIT",
     "authors": [
         {
@@ -13,7 +13,7 @@
         "shopware/platform": "dev-master"
     },
     "extra": {
-        "installer-name": "PaymentPlugin",
+        "shopware-plugin-class": "Swag\\PaymentPlugin\\PaymentPlugin",
         "label": {
             "de_DE": "Zahlungsart Beispielplugin",
             "en_GB": "Example payment plugin"
@@ -25,7 +25,7 @@
     },
     "autoload": {
         "psr-4": {
-            "PaymentPlugin\\": ""
+            "Swag\\PaymentPlugin\\": "src/"
         }
     }
 }

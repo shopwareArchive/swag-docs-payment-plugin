@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace PaymentPlugin;
+namespace Swag\PaymentPlugin;
 
-use PaymentPlugin\Service\ExamplePayment;
+use Swag\PaymentPlugin\Service\ExamplePayment;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
@@ -13,19 +13,9 @@ use Shopware\Core\Framework\Plugin\Context\DeactivateContext;
 use Shopware\Core\Framework\Plugin\Context\InstallContext;
 use Shopware\Core\Framework\Plugin\Context\UninstallContext;
 use Shopware\Core\Framework\Plugin\Util\PluginIdProvider;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Symfony\Component\Config\FileLocator;
 
 class PaymentPlugin extends Plugin
 {
-    public function build(ContainerBuilder $container): void
-    {
-        parent::build($container);
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/DependencyInjection/'));
-        $loader->load('services.xml');
-    }
-
     public function install(InstallContext $context): void
     {
         $this->addPaymentMethod($context->getContext());
@@ -61,7 +51,7 @@ class PaymentPlugin extends Plugin
 
         /** @var PluginIdProvider $pluginIdProvider */
         $pluginIdProvider = $this->container->get(PluginIdProvider::class);
-        $pluginId = $pluginIdProvider->getPluginIdByTechnicalName($this->getName(), $context);
+        $pluginId = $pluginIdProvider->getPluginIdByBaseClass($this->getClassName(), $context);
 
         $examplePaymentData = [
             // payment handler will be selected by the identifier

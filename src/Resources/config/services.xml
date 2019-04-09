@@ -5,10 +5,10 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="PaymentPlugin\Service\ExamplePayment">
+        <service id="Swag\PaymentPlugin\Service\ExamplePayment">
             <argument type="service" id="order_transaction.repository" />
             <argument type="service" id="Shopware\Core\System\StateMachine\StateMachineRegistry" />
-            <tag name="payment.method" />
+            <tag name="payment.method.async" />
         </service>
     </services>
 </container>

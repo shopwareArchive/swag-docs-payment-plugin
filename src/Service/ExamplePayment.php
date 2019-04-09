@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace PaymentPlugin\Service;
+namespace Swag\PaymentPlugin\Service;
 
 use Shopware\Core\Checkout\Payment\Cart\AsyncPaymentTransactionStruct;
 use Shopware\Core\Checkout\Payment\Cart\PaymentHandler\AsynchronousPaymentHandlerInterface;
