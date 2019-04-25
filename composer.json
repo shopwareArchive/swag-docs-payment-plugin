@@ -15,12 +15,12 @@
     "extra": {
         "shopware-plugin-class": "Swag\\PaymentPlugin\\PaymentPlugin",
         "label": {
-            "de_DE": "Zahlungsart Beispielplugin",
-            "en_GB": "Example payment plugin"
+            "de-DE": "Zahlungsart Beispielplugin",
+            "en-GB": "Example payment plugin"
         },
         "description": {
-            "de_DE": "Fügt eine neue Zahlungsmethode dem System hinzu",
-            "en_GB": "Adds a new payment method to the system"
+            "de-DE": "Fügt eine neue Zahlungsmethode dem System hinzu",
+            "en-GB": "Adds a new payment method to the system"
         }
     },
     "autoload": {
