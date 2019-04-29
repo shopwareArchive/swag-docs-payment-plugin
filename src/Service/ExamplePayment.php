@@ -7,8 +7,8 @@ use Shopware\Core\Checkout\Payment\Cart\PaymentHandler\AsynchronousPaymentHandle
 use Shopware\Core\Checkout\Payment\Exception\AsyncPaymentProcessException;
 use Shopware\Core\Checkout\Payment\Exception\CustomerCanceledAsyncPaymentException;
 use Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionStates;
-use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\System\SalesChannel\SalesChannelContext;
 use Shopware\Core\System\StateMachine\StateMachineRegistry;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,8 +36,10 @@ class ExamplePayment implements AsynchronousPaymentHandlerInterface
     /**
      * @throws AsyncPaymentProcessException
      */
-    public function pay(AsyncPaymentTransactionStruct $transaction, Context $context): RedirectResponse
-    {
+    public function pay(
+        AsyncPaymentTransactionStruct $transaction,
+        SalesChannelContext $salesChannelContext
+    ): RedirectResponse {
         // Method that sends the return URL to the external gateway and gets a redirect URL back
         try {
             $redirectUrl = $this->sendReturnUrlToExternalGateway($transaction->getReturnUrl());
@@ -55,8 +57,11 @@ class ExamplePayment implements AsynchronousPaymentHandlerInterface
     /**
      * @throws CustomerCanceledAsyncPaymentException
      */
-    public function finalize(AsyncPaymentTransactionStruct $transaction, Request $request, Context $context): void
-    {
+    public function finalize(
+        AsyncPaymentTransactionStruct $transaction,
+        Request $request,
+        SalesChannelContext $salesChannelContext
+    ): void {
         $transactionId = $transaction->getOrderTransaction()->getId();
 
         // Cancelled payment?
@@ -69,6 +74,7 @@ class ExamplePayment implements AsynchronousPaymentHandlerInterface
 
         $paymentState = $request->query->getAlpha('status');
 
+        $context = $salesChannelContext->getContext();
         if ($paymentState === 'completed') {
             // Payment completed, set transaction status to "paid"
             $stateId = $this->stateMachineRegistry->getStateByTechnicalName(
