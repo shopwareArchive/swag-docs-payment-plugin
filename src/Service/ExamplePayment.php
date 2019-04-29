@@ -2,6 +2,7 @@
 
 namespace Swag\PaymentPlugin\Service;
 
+use Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionStateHandler;
 use Shopware\Core\Checkout\Payment\Cart\AsyncPaymentTransactionStruct;
 use Shopware\Core\Checkout\Payment\Cart\PaymentHandler\AsynchronousPaymentHandlerInterface;
 use Shopware\Core\Checkout\Payment\Exception\AsyncPaymentProcessException;
@@ -16,21 +17,13 @@ use Symfony\Component\HttpFoundation\Request;
 class ExamplePayment implements AsynchronousPaymentHandlerInterface
 {
     /**
-     * @var EntityRepositoryInterface
+     * @var OrderTransactionStateHandler
      */
-    private $orderTransactionRepo;
+    private $transactionStateHandler;
 
-    /**
-     * @var StateMachineRegistry
-     */
-    private $stateMachineRegistry;
-
-    public function __construct(
-        EntityRepositoryInterface $orderTransactionRepo,
-        StateMachineRegistry $stateMachineRegistry
-    ) {
-        $this->orderTransactionRepo = $orderTransactionRepo;
-        $this->stateMachineRegistry = $stateMachineRegistry;
+    public function __construct(OrderTransactionStateHandler $transactionStateHandler)
+    {
+        $this->transactionStateHandler = $transactionStateHandler;
     }
 
     /**
@@ -77,26 +70,11 @@ class ExamplePayment implements AsynchronousPaymentHandlerInterface
         $context = $salesChannelContext->getContext();
         if ($paymentState === 'completed') {
             // Payment completed, set transaction status to "paid"
-            $stateId = $this->stateMachineRegistry->getStateByTechnicalName(
-                OrderTransactionStates::STATE_MACHINE,
-                OrderTransactionStates::STATE_PAID,
-                $context
-            )->getId();
+            $this->transactionStateHandler->complete($transaction->getOrderTransaction()->getId(), $context);
         } else {
             // Payment not completed, set transaction status to "open"
-            $stateId = $this->stateMachineRegistry->getStateByTechnicalName(
-                OrderTransactionStates::STATE_MACHINE,
-                OrderTransactionStates::STATE_OPEN,
-                $context
-            )->getId();
+            $this->transactionStateHandler->open($transaction->getOrderTransaction()->getId(), $context);
         }
-
-        $transactionUpdate = [
-            'id' => $transactionId,
-            'stateId' => $stateId,
-        ];
-
-        $this->orderTransactionRepo->update([$transactionUpdate], $context);
     }
 
     private function sendReturnUrlToExternalGateway(string $returnUrl): string
