@@ -7,10 +7,8 @@ use Shopware\Core\Checkout\Payment\Cart\AsyncPaymentTransactionStruct;
 use Shopware\Core\Checkout\Payment\Cart\PaymentHandler\AsynchronousPaymentHandlerInterface;
 use Shopware\Core\Checkout\Payment\Exception\AsyncPaymentProcessException;
 use Shopware\Core\Checkout\Payment\Exception\CustomerCanceledAsyncPaymentException;
-use Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionStates;
-use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\Validation\DataBag\RequestDataBag;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
-use Shopware\Core\System\StateMachine\StateMachineRegistry;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -31,6 +29,7 @@ class ExamplePayment implements AsynchronousPaymentHandlerInterface
      */
     public function pay(
         AsyncPaymentTransactionStruct $transaction,
+        RequestDataBag $dataBag,
         SalesChannelContext $salesChannelContext
     ): RedirectResponse {
         // Method that sends the return URL to the external gateway and gets a redirect URL back
@@ -70,7 +69,7 @@ class ExamplePayment implements AsynchronousPaymentHandlerInterface
         $context = $salesChannelContext->getContext();
         if ($paymentState === 'completed') {
             // Payment completed, set transaction status to "paid"
-            $this->transactionStateHandler->complete($transaction->getOrderTransaction()->getId(), $context);
+            $this->transactionStateHandler->pay($transaction->getOrderTransaction()->getId(), $context);
         } else {
             // Payment not completed, set transaction status to "open"
             $this->transactionStateHandler->open($transaction->getOrderTransaction()->getId(), $context);
