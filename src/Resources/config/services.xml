@@ -7,7 +7,7 @@
     <services>
         <service id="Swag\PaymentPlugin\Service\ExamplePayment">
             <argument type="service" id="Shopware\Core\Checkout\Order\Aggregate\OrderTransaction\OrderTransactionStateHandler"/>
-            <tag name="payment.method.async" />
+            <tag name="shopware.payment.method.async" />
         </service>
     </services>
 </container>
