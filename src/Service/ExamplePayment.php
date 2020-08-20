@@ -69,7 +69,7 @@ class ExamplePayment implements AsynchronousPaymentHandlerInterface
         $context = $salesChannelContext->getContext();
         if ($paymentState === 'completed') {
             // Payment completed, set transaction status to "paid"
-            $this->transactionStateHandler->pay($transaction->getOrderTransaction()->getId(), $context);
+            $this->transactionStateHandler->paid($transaction->getOrderTransaction()->getId(), $context);
         } else {
             // Payment not completed, set transaction status to "open"
             $this->transactionStateHandler->reopen($transaction->getOrderTransaction()->getId(), $context);
@@ -78,13 +78,15 @@ class ExamplePayment implements AsynchronousPaymentHandlerInterface
 
     private function sendReturnUrlToExternalGateway(string $returnUrl): string
     {
-        $paymentProviderUrl = '';
+        // Must be provided by the PaymentProvider after you send the return URL
+        $paymentProviderUrl = null;
+
         $requestData = [
+            // more data like amount, items, etc
             'returnUrl' => $returnUrl,
         ];
 
-        // Do some API Call to your payment provider
-
+        // Do API Call to your payment provider with the request data and get back the $paymentProviderUrl
         return $paymentProviderUrl;
     }
 }
