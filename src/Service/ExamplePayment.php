@@ -78,7 +78,7 @@ class ExamplePayment implements AsynchronousPaymentHandlerInterface
 
     private function sendReturnUrlToExternalGateway(string $returnUrl): string
     {
-        // Must be provided by the PaymentProvider after you send the return URL
+        // Must be provided by the PaymentProvider after you send the request data
         $paymentProviderUrl = null;
 
         $requestData = [
